@@ -1,0 +1,185 @@
+---
+title: "Pandas vs Polars"
+date: "2023-05-03"
+tags: ["Data Science", "Python", "TIER"]
+banner: "https://raw.githubusercontent.com/Ming2046/EnviroByte-Blog/master/images/NextLevel1.png"
+description: "Efficiently Importing and Processing Large Datasets in Python with Pandas and Polars"
+blogType: "normal"
+---
+
+## Large Datasets
+
+Efficiently Importing and Processing Large Datasets in Python with Pandas and Polars.
+When working with large datasets, it's best to choose the right tools and techniques to ensure efficient data processing. In this blog, we'll explore two functions that import large amounts of Petrinex data from local folders into a dataframe in Python for analysis. We'll compare the performance of these functions using Pandas and Polars, and provide code snippets to summarize data by company-operator and by facility ID (petrienx ID).
+
+## Function 1: Importing Data with Pandas
+
+The first function uses Pandas to import and process venting data for a range of years. Here's the implementation:
+
+```python
+import pandas as pd
+import glob
+import os
+
+def process_venting_data(start_year, end_year):
+    all_years_data = []
+
+    for year in range(start_year, end_year + 1):
+        folder_path = f'./Datasets/Petrinex_{year}/'
+        all_files = glob.glob(os.path.join(folder_path, f"Vol_{year}-*-AB.CSV"))
+
+        print(f"Processing year {year}")
+        print("Files found:", all_files)
+
+        if not all_files:
+            print(f"No files found for year {year}.")
+            continue
+
+        df_list = []
+        for file in all_files:
+            df = pd.read_csv(file)
+            venting_data = df[df['ActivityID'] == 'VENT'].copy()
+            venting_data['Month'] = file.split('-')[1]
+            venting_data['Year'] = year
+            venting_cleaned = venting_data[['OperatorName', 'ReportingFacilityID', 'Volume', 'Month', 'Year']]
+            df_list.append(venting_cleaned)
+
+        if df_list:
+            year_combined_df = pd.concat(df_list, ignore_index=True)
+            all_years_data.append(year_combined_df)
+        else:
+            print(f"No venting data for year {year}.")
+
+    if all_years_data:
+        combined_df = pd.concat(all_years_data, ignore_index=True)
+        combined_file_path = './Datasets/Petrinex_combined_venting_data.csv'
+        combined_df.to_csv(combined_file_path, index=False)
+        print(f"Combined data for years {start_year}-{end_year} saved to {combined_file_path}")
+    else:
+        print("No data found for the specified years.")
+
+# Example usage
+start_year = int(input("Enter the start year: "))
+end_year = int(input("Enter the end year: "))
+process_venting_data(start_year, end_year)
+```
+
+### Explanation
+
+- **Reading Files**: The function reads CSV files for each month within the specified year range using the `glob` module to match file patterns.
+- **Filtering Data**: It filters the data to keep only the rows where the `ActivityID` is 'VENT', indicating venting activities.
+- **Combining Data**: It combines the data from all files for each year and then combines the yearly data into a single dataframe.
+- **Saving Data**: The combined data is saved to a CSV file.
+
+## Function 2: Importing Data with Pandas
+
+```python
+import polars as pl
+import os
+
+def load_and_process_data(years, base_path):
+    df_list = []
+    for year in years:
+        year_path = os.path.join(base_path, f'petrinex_{year}')
+        if not os.path.exists(year_path):
+            raise FileNotFoundError(f"The specified path does not exist: {year_path}")
+
+        directory_contents = os.listdir(year_path)
+
+        for month_file in directory_contents:
+            if month_file.lower().endswith('.csv'):
+                file_path = os.path.join(year_path, month_file)
+
+                schema = {
+                    'ProductionMonth': pl.Utf8,
+                    'OperatorBAID': pl.Utf8,
+                    'OperatorName': pl.Utf8,
+                    'ReportingFacilityID': pl.Utf8,
+                    'ReportingFacilityProvinceState': pl.Utf8,
+                    'ReportingFacilityType': pl.Utf8,
+                    'ReportingFacilityIdentifier': pl.Int64,
+                    'ReportingFacilityName': pl.Utf8,
+                    'ReportingFacilitySubType': pl.Int64,
+                    'ReportingFacilitySubTypeDesc': pl.Utf8,
+                    'ReportingFacilityLocation': pl.Utf8,
+                    'FacilityLegalSubdivision': pl.Int64,
+                    'FacilitySection': pl.Int64,
+                    'FacilityTownship': pl.Int64,
+                    'FacilityRange': pl.Int64,
+                    'FacilityMeridian': pl.Int64,
+                    'SubmissionDate': pl.Utf8,
+                    'ActivityID': pl.Utf8,
+                    'ProductID': pl.Utf8,
+                    'FromToID': pl.Utf8,
+                    'FromToIDProvinceState': pl.Utf8,
+                    'FromToIDType': pl.Utf8,
+                    'FromToIDIdentifier': pl.Utf8,
+                    'Volume': pl.Float64,
+                    'Energy': pl.Float64,
+                    'Hours': pl.Int64,
+                    'CCICode': pl.Int64,
+                    'ProrationProduct': pl.Utf8,
+                    'ProrationFactor': pl.Float64,
+                    'Heat': pl.Utf8
+                }
+
+                df = pl.read_csv(file_path, schema=schema, ignore_errors=True)
+
+                df = df.with_columns(
+                    pl.col('ProductionMonth').str.strptime(pl.Date, '%Y-%m')
+                )
+
+                df_list.append(df)
+
+    if not df_list:
+        raise ValueError("No CSV files were found and loaded.")
+
+    data = pl.concat(df_list)
+
+    return data
+```
+
+### Explanation
+
+- **Reading Files**: The function reads CSV files for each month within the specified year range by checking the directory contents and matching file extensions.
+- **Schema Definition**: It defines a schema for the CSV files to ensure correct data types during reading.
+- **Parsing Dates**: The function parses the `ProductionMonth` column as dates.
+- **Combining Data**: It combines the data from all files into a single dataframe using Polars' efficient concatenation.
+
+### Time Comparsion
+
+Let's compare the performance of these two functions. Using Pandas, the data import takes approximately 73 seconds!
+
+while using Polars, it takes about 13 seconds. This significant difference show that polar's lazy excution loading option can be good in certain scenarios.
+
+### Pros and Cons
+
+**Pandas:**
+
+- **Pros:**
+  - Mature and widely used library
+  - Rich ecosystem with extensive documentation and community support
+  - Support difference in datatype and has capability to handle mismatches
+- **Cons:**
+  - Slower performance with very large datasets
+  - Higher memory consumption
+
+**Polars:**
+
+- **Pros:**
+  - Faster performance
+  - Lower memory consumption
+- **Cons:**
+  - Less mature compared to Pandas
+  - Smaller community and fewer available resources
+  - Might need a schema for unclean datasets
+
+## Summarizing Data
+
+To summarize data by fuel, flare, and vent, you can filter the dataframe after importing the data to python. Here's an example:
+
+```python
+venting_data = df[df['ActivityID'] == 'VENT'].copy()
+```
+
+You can simply change 'VENT' to any other activity such as fuel or flare to filter the data accordingly. This simple filtering technique allows you to quickly isolate the data you need for further analysis.

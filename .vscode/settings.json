@@ -7,4 +7,9 @@
       "scope": "workspace"
     }
   }
+  "files.associations": {
+    "*.mdx": "markdown"
+},
+
 }
+

@@ -1,0 +1,70 @@
+---
+title: "Fuel Allocation"
+date: "2023-04-28"
+tags: ["next.js", "nextjs", "new"]
+banner: "https://raw.githubusercontent.com/Ming2046/EnviroByte-Blog/master/images/NextLevel1.png"
+description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+blogType: "normal"
+---
+
+# Fuel Allocation Calculator
+
+The blog post show the calculation of allocated fuel using a Python function. The allocation is done based on the `Nameplate Power (kW)`, `Equipment Hours`, `Load`, and `Thermal Efficiency` of the equipment.
+
+## Python Code
+
+Here is the core Python function used to calculate the allocated fuel:
+
+```python
+import pandas as pd
+
+def calculate_allocated_fuel(row, df_clean):
+    # Subset of the relevant block
+    block = df_clean[(df_clean["Month"] == row["Month"]) & (df_clean["Phase"] == row["Phase"])]
+
+    numerator = (row["Nameplate Power (kW)"] * row["Equipment Hours"] * row["Load"]) / row["Thermal Eff."]
+
+    denominator = (
+        (block["Nameplate Power (kW)"] * block["Equipment Hours"] * block["Load"]) / block["Thermal Eff."]
+    ).sum()
+
+    if denominator == 0:
+        return 0
+    else:
+        return row["Fuel"] * (numerator / denominator)
+
+df_clean["Allocated Fuel"] = df_clean.apply(lambda row: calculate_allocated_fuel(row, df_clean), axis=1)
+
+print("Updated DataFrame with Allocated Fuel:")
+print(df_clean.head(18))
+print(df_clean.tail(18))
+
+file_path = 'path_to_your_file.xlsx'
+with pd.ExcelWriter(file_path, mode='a') as writer:
+    df_clean.to_excel(writer, index=False, sheet_name='Allocated Fuel Data')
+
+print("Updated DataFrame with Allocated Fuel has been written to a new sheet in the original Excel file.")
+```
+
+## Math Formula
+
+The allocation of fuel is calculated using the following formula:
+
+$$
+\text{Numerator} = \frac{\text{Nameplate Power (kW)} \times \text{Equipment Hours} \times \text{Load}}{\text{Thermal Efficiency}}
+$$
+
+$$
+\text{Denominator} = \sum \left( \frac{\text{Nameplate Power (kW)} \times \text{Equipment Hours} \times \text{Load}}{\text{Thermal Efficiency}} \right)
+$$
+
+$$
+\text{Allocated Fuel} = \text{Fuel} \times \frac{\text{Numerator}}{\text{Denominator}}
+$$
+
+## In this equation:
+
+- **Nameplate Power (kW)**: The rated power of the equipment.
+- **Equipment Hours**: The operating hours of the equipment.
+- **Load**: The load factor of the equipment.
+- **Thermal Efficiency**: The efficiency of the equipment in converting fuel to energy.
