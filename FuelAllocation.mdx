@@ -51,6 +51,10 @@ print("Updated DataFrame with Allocated Fuel has been written to a new sheet in 
 The allocation of fuel is calculated using the following formula:
 
 $$
+\text{v}_{fuel,j,p} = \sum_{j=1}^{N} \frac{P_{rate,j}}{n_{j}} \times\frac{LF_{i}}{LHV_{j}} \times OH_{i} \times 0.0036
+$$
+
+$$
 \text{Numerator} = \frac{\text{Nameplate Power (kW)} \times \text{Equipment Hours} \times \text{Load}}{\text{Thermal Efficiency}}
 $$
 
