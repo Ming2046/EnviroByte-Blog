@@ -1,31 +1,50 @@
 ---
-title: "Alberta TIER Regulation"
+title: "Alberta TIER"
 date: "2024-02-01"
-tags: ["Tutorials", "TIER", "GHG"]
+tags: ["Python", "TIER", "GHG"]
 banner: "https://raw.githubusercontent.com/Ming2046/EnviroByte-Blog/master/images/AlbertaTIER.jpg"
-description: "Alberta Technology Innovation and Emissions Reduction (TIER) Regulation is designed based cap and trade system"
+description: "This tutorial shows how to combine multiple monthly files from Petrinex into one file for aggregate TIER reporting."
 blogType: "feature"
 ---
 
-We recommend using **Static Generation** (with and without data) whenever possible because your page can be built once and served by CDN, which makes it much faster than having a server render the page on every request.
+The Alberta TIER (Technology Innovation and Emissions Reduction) regulation is a key component of Alberta’s climate policy, designed to reduce greenhouse gas (GHG) emissions and incentivize technological innovation. The regulation includes specific provisions for various sectors, including the conventional oil and gas sector.
 
-```ts
-const sum = (num1: number, num2: number): number => {
-  return num1 + num2;
-};
+For the conventional oil and gas sector, TIER allows for the aggregation of multiple facilities to create a single reporting entity. The aggregate facility emissions are calculated based on Petrinex data, which provides monthly volumetric data for oil and gas operations in Alberta.
 
-console.log(sum(4, 8)); //12
+[Petrinex](https://www.petrinex.ca/PD/Pages/default.aspx) is a data warehouse. It has monthly volumetric data from Oil and Gas operations in Alberta, such as production, fuel use, flare, vent data. The volumetric data can be [here](https://www.petrinex.ca/PD/Pages/APD.aspx).
+
+Note: data for Saskatchewan and British Columbia are not publicly available.
+
+Check all the monthly files
+
+```python
+import pandas as pd
+import numpy as np
+import glob
+files = glob.glob('*.csv')
+files
 ```
 
-You can use Static Generation for many types of pages, including:
+Note:
 
-- Marketing pages
-- Blog posts
-- E-commerce product listings
-- Help and documentation
+- macOS is sensitive to the letters \*\.csv or \*\.CSV.
+- Windows does not differentiate csv or CSV.
 
-You should ask yourself: "Can I pre-render this page **ahead** of a user's request?" If the answer is yes, then you should choose Static Generation.
+Combine all monthly files into one file
 
-On the other hand, Static Generation is **not** a good idea if you cannot pre-render a page ahead of a user's request. Maybe your page shows frequently updated data, and the page content changes on every request.
+```python
+df_all = pd.concat([pd.read_csv(f,low_memory=False) for f in glob.glob('*.CSV')],
+                    axis = 0,sort = True)
+df_all.head()
+```
 
-In that case, you can use **Server-Side Rendering**. It will be slower, but the pre-rendered page will always be up-to-date. Or you can skip pre-rendering and use client-side JavaScript to populate data.
+```python
+col_removal =
+['ReportingFacilityProvinceState','ReportingFacilityLocation'
+'FacilityLegalSubdivision','FacilitySection','FacilityTownship',
+'FacilityRange','FacilityMeridian','SubmissionDate',
+'CCICode','ProrationProduct','ProrationFactor',
+'FromToIDProvinceState']
+df =df_all.drop(columns= col_removal)
+df.to_csv('Petrinex_2019.csv',index=False)
+```
