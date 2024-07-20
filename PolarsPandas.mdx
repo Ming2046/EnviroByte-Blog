@@ -10,9 +10,10 @@ blogType: "normal"
 ## Large Datasets
 
 Efficiently Importing and Processing Large Datasets in Python with Pandas and Polars.
-When working with large datasets, it's best to choose the right tools and techniques to ensure efficient data processing. In this blog, we'll explore two functions that import large amounts of Petrinex data from local folders into a dataframe in Python for analysis. We'll compare the performance of these functions using Pandas and Polars, and provide code snippets to summarize data by company-operator and by facility ID (petrienx ID).
 
-## Function 1: Importing Data with Pandas
+When working with large datasets, it's best to choose the right tools and techniques to ensure efficient data processing. In this blog, we'll explore two functions that import large amounts of Petrinex data from local folders into a dataframe in Python for analysis. We'll compare the performance of these functions using Pandas and Polars, and provide code snippets to summarize data by company-operator and by facility ID (Petrienx ID).
+
+## Importing Data with Pandas
 
 The first function uses Pandas to import and process venting data for a range of years. Here's the implementation:
 
@@ -71,7 +72,7 @@ process_venting_data(start_year, end_year)
 - **Combining Data**: It combines the data from all files for each year and then combines the yearly data into a single dataframe.
 - **Saving Data**: The combined data is saved to a CSV file.
 
-## Function 2: Importing Data with Pandas
+## Importing Data with Polars
 
 ```python
 import polars as pl
@@ -146,11 +147,11 @@ def load_and_process_data(years, base_path):
 - **Parsing Dates**: The function parses the `ProductionMonth` column as dates.
 - **Combining Data**: It combines the data from all files into a single dataframe using Polars' efficient concatenation.
 
-### Time Comparsion
+### Time Comparison
 
 Let's compare the performance of these two functions. Using Pandas, the data import takes approximately 73 seconds!
 
-while using Polars, it takes about 13 seconds. This significant difference show that polar's lazy excution loading option can be good in certain scenarios.
+while using Polars, it takes about 13 seconds. This significant difference show that polar's lazy execution loading option can be good in certain scenarios.
 
 ### Pros and Cons
 
