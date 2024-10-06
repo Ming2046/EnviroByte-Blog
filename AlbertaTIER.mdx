@@ -7,11 +7,11 @@ description: "This tutorial shows how to combine multiple monthly files from Pet
 blogType: "feature"
 ---
 
-The Alberta TIER (Technology Innovation and Emissions Reduction) regulation is a key component of Alberta’s climate policy, designed to reduce greenhouse gas (GHG) emissions and incentivize technological innovation. The regulation includes specific provisions for various sectors, including the conventional oil and gas sector.
+The Alberta TIER (Technology Innovation and Emissions Reduction) regulation allows for the aggregation of multiple facilities to create a single reporting entity. The aggregate facility emissions are calculated based on Petrinex data, which provides monthly volumetric data for oil and gas operations in Alberta.
 
-For the conventional oil and gas sector, TIER allows for the aggregation of multiple facilities to create a single reporting entity. The aggregate facility emissions are calculated based on Petrinex data, which provides monthly volumetric data for oil and gas operations in Alberta.
+[Petrinex](https://www.petrinex.ca/PD/Pages/default.aspx) is a data warehouse. It has monthly volumetric data from Oil and Gas operations in Alberta, such as production, fuel use, flare, vent data. The volumetric data can be [here]
 
-[Petrinex](https://www.petrinex.ca/PD/Pages/default.aspx) is a data warehouse. It has monthly volumetric data from Oil and Gas operations in Alberta, such as production, fuel use, flare, vent data. The volumetric data can be [here](https://www.petrinex.ca/PD/Pages/APD.aspx).
+(https://www.petrinex.ca/PD/Pages/APD.aspx).
 
 Note: data for Saskatchewan and British Columbia are not publicly available.
 
@@ -38,6 +38,8 @@ df_all = pd.concat([pd.read_csv(f,low_memory=False) for f in glob.glob('*.CSV')]
 df_all.head()
 ```
 
+remove unnecessary columns.
+
 ```python
 col_removal =
 ['ReportingFacilityProvinceState','ReportingFacilityLocation'
@@ -47,4 +49,18 @@ col_removal =
 'FromToIDProvinceState']
 df =df_all.drop(columns= col_removal)
 df.to_csv('Petrinex_2019.csv',index=False)
+```
+
+Select company you want to report
+
+```python
+clientA=df[df['OperatorName'].str.contains('clientA')]
+clientAFuelFlareVent = clientA[(clientA['ActivityID'] == 'FUEL') | (clientA['ActivityID'] == 'FLARE')| (clientA['ActivityID'] == 'VENT')]
+clientAFuelFlareVent
+```
+
+Calculate total fuel, flare and vent
+
+```python
+df. groupby(['OperatorName','ReportingFacilityID','FromToID','ActivityID','ProductionMonth'])['Volume'].sum()
 ```
