@@ -1,0 +1,84 @@
+---
+title: "Performance Materiality in GHG verification/assurance"
+date: "2024-10-05"
+tags: ["Verification", "GHG", "LCA"]
+banner: "https://raw.githubusercontent.com/Ming2046/EnviroByte-Blog/master/images/cleanfuel.jpg"
+description: "Clean Fuel Regulation sets a limit on the verification of different report"
+blogType: "normal"
+---
+
+## Background
+
+Performance materiality is a well-known concept in financial audits but is less commonly applied in the realm of Greenhouse Gas (GHG) verification, especially by verification bodies without a financial audit background. However, as the demand for company-wide GHG verification increases, the use of performance materiality is becoming more relevant for verifiers in ensuring efficient and effective assurance.
+
+Traditionally, GHG verification has been focused on regulatory verifications for individual facilities. Since individual facilities tend to be relatively small, verifiers often didn't need to consider performance materiality. In some cases, certain GHG regulations require verifiers to sample 100% of the data, rendering performance materiality unnecessary.
+
+However, with the rise of corporate-wide GHG assurance and large-scale regulatory verification (such as Alberta TIER aggregate facilities, BC linear facilities, and some annual reports under the Clean Fuel Regulation (CFR)), performance materiality has become a valuable tool for verifiers. It allows them to strategically select samples when verifying large or aggregated datasets, making the process more efficient while maintaining accuracy.
+
+In contrast, some verification bodies rely on materiality thresholds as a simple cut-off to select samples. This approach overlooks the risk that aggregated errors—small misstatements that accumulate across different data points—could result in a material misstatement. By incorporating performance materiality, verifiers can mitigate this risk and focus on areas most likely to impact the overall integrity of the GHG inventory.
+
+## What is Performance Materiality?
+
+In the context of GHG verification, particularly under Canada's Clean Fuel Regulation (CFR), performance materiality comes into play when verifiers need to sample large datasets, such as the volume of renewable fuel imported, which could consist of hundreds of invoices, receipts, or bills of lading.
+
+The Methods for Verification and Certification (MVC) within the CFR define performance materiality as:
+
+> Performance materiality: A value set lower than what might be quantitatively material to the intended user to identify misstatements that, when aggregated, might be material.
+
+Performance materiality helps to:
+
+- Reduce the risk that undetected misstatements in the GHG inventory could exceed the materiality threshold when combined.
+- Provide a buffer to ensure that even smaller errors, when aggregated, do not become significant.
+- Scope verification testing, focusing on areas more likely to contain material misstatements and allocating verification resources more effectively.
+
+## How is Performance Materiality Used in GHG Verification?
+
+Performance materiality is often set between 50% and 75% of the overall materiality threshold. This approach ensures that even small misstatements, which might otherwise be overlooked, are considered during the verification process.
+
+For example, consider a company with 100 assets that reports 1 million metric tons of CO₂e emissions in its GHG inventory. For a limited level of assurance, the verifier may set the performance materiality at 75% of 5%, equating to 3.75% (or 37,500 metric tons of CO₂e).
+
+In this case, the verifier would sample assets emitting more than 37,500 tons of CO₂e and perform detailed verification procedures on those samples. This allows the verifier to focus on larger sources of emissions while ensuring the overall accuracy of the GHG inventory.
+
+| Inventory information                            | Value     | Unit   |
+| ------------------------------------------------ | --------- | ------ |
+| Scope 1                                          | 1,000,000 | t CO2e |
+| Materiality                                      | 5%        |        |
+| Materiality                                      | 50,000    | t CO2e |
+| Performance Materiality (PM, 75% of materiality) | 3.75%     |        |
+| Performance Materiality                          | 37,500    | t CO2e |
+
+The inventory looks like this
+
+| Asset List | Scope 1 (t CO2e) | \>PM | Sampled? |
+| ---------- | ---------------- | ---- | -------- |
+| Facility 1 | 24,140           | No   |          |
+| Facility 2 | 43,504           | Yes  | Yes      |
+| Facility 3 | 79,236           | Yes  | Yes      |
+| Facility 4 | 43,356           | No   |          |
+| Facility 5 | 50,674           | Yes  | Yes      |
+| Facility 6 | 60,445           | Yes  | Yes      |
+| …          | …                | …    | ..       |
+| Total      | 1,000,000        |      |          |
+
+## Caution in Using Performance Materiality
+
+While performance materiality is a useful tool, it is important not to rely on it exclusively when selecting samples for GHG verification. The verifier should also consider the risk of material misstatement, the nature of the data, and the complexity of the data.
+
+In practice, analytical procedures, such as year-over-year changes or trend analysis, should be applied even to assets below the performance materiality threshold. This allows verifiers to identify outliers or unusual patterns, which may warrant additional scrutiny despite being under the materiality threshold.
+
+Below is an example:
+
+| Asset List | Scope 1 (t CO2e) | \>PM | Year over Year Change | Sampled? |
+| ---------- | ---------------- | ---- | --------------------- | -------- |
+| Facility 1 | 24,140           | No   | 12%                   | **Yes**  |
+| Facility 2 | 43,504           | Yes  | 5%                    | Yes      |
+| Facility 3 | 79,236           | Yes  | 4%                    | Yes      |
+| Facility 4 | 43,356           | No   | 2%                    |          |
+| Facility 5 | 50,674           | Yes  | 9%                    | Yes      |
+| Facility 6 | 60,445           | Yes  | 12%                   | Yes      |
+| …          | …                | …    | …                     | ..       |
+| Total      | 1,000,000        |      |                       |          |
+
+## Conclusion
+
+In the evolving landscape of GHG verification, performance materiality is becoming an increasingly important concept, especially for large-scale or company-wide assurance efforts. By carefully applying performance materiality, verifiers can focus on the areas that matter most, ensuring that even smaller errors don’t combine to create significant misstatements. However, it’s critical to use performance materiality in conjunction with other verification techniques to ensure a comprehensive and reliable GHG inventory assessment.
