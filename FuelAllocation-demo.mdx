@@ -1,0 +1,58 @@
+---
+title: "Fuel Allocation for demo site"
+date: "2024-01-28"
+tags: ["Python", "GHG", "Data Science"]
+banner: "https://raw.githubusercontent.com/Ming2046/EnviroByte-Blog/master/images/fuelallocation.jpg"
+description: "Calculation of fuel allocation using Python function"
+blogType: "normal"
+---
+
+Note: this markdown is for demo.envirobyte.com site.
+
+## Fuel Allocation
+
+the fuel estimation is calculated based on [Alberta greenhouse gas quantification methodologies, AQM v2.3](https://open.alberta.ca/publications/alberta-greenhouse-gas-quantification-methodologies)
+
+The equation is written as:
+
+$$
+v_{fuel,j,p} = \sum_{j=1}^{N} \frac{P_{rate,j}}{n_{j}} \times\frac{LF_{i}}{LHV_{j}} \times OH_{i} \times 0.0036
+$$
+
+where
+
+- $v_{fuel,j,p}$ is estimated fuel consumption from combustion equipment for a specific fuel type for the reporting period, p (m3).
+- $j$ is equipment type
+- $P_{rate,j}$ is the maximum rated output power of the equipment j (kW).
+- $LF_{j}$ is the load factor for each type of equipment j.
+- $OH_{j}$ is the operating hours for each type of equipment j.
+- $n_{j}$ is the thermal efficiency of the equipment j.
+- $LHV_{j}$ is the lower heating value of the fuel for each type of equipment j (MJ/m3).
+- 0.0036 Conversion factor for kWh to GJ.
+
+The thermal efficiency $n_{j}$ represents the ratio of output energy to input energy:
+
+$$
+n_{j} = \frac{output}{input}
+$$
+
+LHV and the conversion factor 0.0036 is not needed for fuel allocation as they will be cancelled out. The above equation can be simplified as
+
+$$
+v_{fuel,j,p} = \sum_{j=1}^{N} \frac{P_{rate,j}}{n_{j}} \times{LF_{i}} \times OH_{i}
+$$
+
+where
+
+- $v_{fuel,j,p}$ is estimated fuel consumption from combustion equipment for a specific fuel type for the reporting period, p (m3).
+- $j$ is equipment type
+- $P_{rate,j}$ is the maximum rated output power of the equipment j (kW).
+- $LF_{j}$ is the load factor for each type of equipment j.
+- $OH_{j}$ is the operating hours for each type of equipment j.
+- $n_{j}$ is the thermal efficiency of the equipment j.
+
+The allocation fuel to each equipment is calculated
+
+$$
+fuel_{j} = TotalFuel_{measured} \times \frac{Equipment_{j}}{v_{fuel}}
+$$
