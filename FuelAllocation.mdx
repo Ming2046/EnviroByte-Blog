@@ -7,13 +7,92 @@ description: "Calculation of fuel allocation using Python function"
 blogType: "normal"
 ---
 
-# Fuel Allocation Calculator
+## Fuel Allocation
 
-The blog post show the calculation of allocated fuel using a Python function. The allocation is done based on the `Nameplate Power (kW)`, `Equipment Hours`, `Load`, and `Thermal Efficiency` of the equipment.
+### AQM v2.3 Fuel Consumption Calculation (Equation C.6-1)
+
+[Alberta greenhouse gas quantification methodologies, AQM v2.3](https://open.alberta.ca/publications/alberta-greenhouse-gas-quantification-methodologies) provides methods to estimate fuel consumption for combustion equipment. However, a critical issue arises in Equation C.6-1, where the calculation does not accurately reflect energy input as intended.
+
+The equation provided in AQM v2.3 for estimating fuel consumption is:
+
+$$
+v_{fuel,j,p} = \sum_{j=1}^{N} \frac{P_{rate,j}}{n_{j}} \times\frac{LF_{i}}{LHV_{j}} \times OH_{i} \times 0.0036
+$$
+
+where
+
+- $v_{fuel,j,p}$ is estimated fuel consumption from combustion equipment for a specific fuel type for the reporting period, p (m3).
+- $j$ is equipment type
+- $P_{rate,j}$ is the maximum rated **input** power of the equipment j (kW).
+- $LF_{j}$ is the load factor for each type of equipment j.
+- $OH_{j}$ is the operating hours for each type of equipment j.
+- $n_{j}$ is the thermal efficiency of the equipment j.
+- $LHV_{j}$ is the lower heating value of the fuel for each type of equipment j (MJ/m3).
+- 0.0036 Conversion factor for kWh to GJ.
+
+The thermal efficiency $n_{j}$ represents the ratio of output energy to input energy:
+
+$$
+n_{j} = \frac{output}{input}
+$$
+
+When this efficiency factor is applied in AQM's equation, the calculation inadvertently represents energy output rather than input.
+
+## API Fuel Calculation
+
+American Petroleum Institute (API)'s [Compendium of Greenhouse Gas Emissions Methodologies for the Natural Gas and Oil Industry, 2021](https://www.api.org/~/media/files/policy/esg/ghg/2021-api-ghg-compendium-110921.pdf) provides a correct methodology for calculating fuel consumption in Equation 4-5 and 4-6:
+
+> API 2021 Equation 4-5.
+>
+> $$
+> FC = ER \times LF \times OH \times ETT \times \frac{1}{HV}
+> $$
+>
+> where,
+>
+> - FC is the fuel consumption (volumen/year)
+> - ER is the equipment rate (hp,kW,or J)
+> - LF is the load factor
+> - OH is the operating hours
+> - ETT is the equipment thermal efficiency (Btu <sub>input</sub> / hp-hr <sub>output</sub>, Btu<sub>input</sub> / kW-hr <sub>output</sub>, or J<sub>input</sub> / J <sub>output</sub>))
+> - HV is the higher heating value
+
+In the API 2021 compendium, thermal efficiency is represented as input-to-output (opposite to the standard output-to-input convention), and equipment rate is based on the equipment's output power, unlike AQM v2.3's focus on input power.
+
+## Nameplate
+
+The inconsistency between AQM v2.3 and API v2021 methodologies can be attributed to differences in nameplate power definitions:
+
+- For boilers and heaters, the nameplate often indicates energy input[^1].
+- In API v2021, the equipment rate corresponds to output energy.
+
+## Correction to the AQM v2.3
+
+The AQM Table C-1 and C-2 provide both thermal efficiency and load factors (based on fractions of maximum rated power output). This correction implies that $P_{rated,j}$ should represent output power, not input as stated in AQM v2.3.
+
+- For engines and motors: Nameplate power indicates output power, so AQM v2.3's approach can convert output to input..
+
+- For heaters and boilers: Nameplate power already represents input power, so dividing by thermal efficiency is unnecessary. The corrected equation for these types of equipment is:
+
+$$
+v_{fuel,j,p} = \sum_{j=1}^{N} P_{rate,j} \times\frac{LF_{i}}{LHV_{j}} \times OH_{i} \times 0.0036
+$$
+
+where
+
+- $v_{fuel,j,p}$ is estimated fuel consumption from combustion equipment for a specific fuel type for the reporting period, p (m3).
+- $j$ is equipment type
+- $P_{rate,j}$ is the maximum rated **input** power of the equipment j (kW).
+- $LF_{j}$ is the load factor for each type of equipment j.
+- $OH_{j}$ is the operating hours for each type of equipment j.
+- $LHV_{j}$ is the lower heating value of the fuel for each type of equipment j (MJ/m3).
+- 0.0036 Conversion factor for kWh to GJ.
+
+This correction aligns AQM with actual practice for fuel allocation calculations.
 
 ## Python Code
 
-Here is the core Python function used to calculate the allocated fuel:
+To illustrate this methodology, we’ve included a Python function to calculate allocated fuel consumption based on nameplate power, operating hours, load factor, and thermal efficiency.
 
 ```python
 import pandas as pd
@@ -46,29 +125,4 @@ with pd.ExcelWriter(file_path, mode='a') as writer:
 print("Updated DataFrame with Allocated Fuel has been written to a new sheet in the original Excel file.")
 ```
 
-## Math Formula
-
-The allocation of fuel is calculated using the following formula:
-
-$$
-\text{v}_{fuel,j,p} = \sum_{j=1}^{N} \frac{P_{rate,j}}{n_{j}} \times\frac{LF_{i}}{LHV_{j}} \times OH_{i} \times 0.0036
-$$
-
-$$
-\text{Numerator} = \frac{\text{Nameplate Power (kW)} \times \text{Equipment Hours} \times \text{Load}}{\text{Thermal Efficiency}}
-$$
-
-$$
-\text{Denominator} = \sum \left( \frac{\text{Nameplate Power (kW)} \times \text{Equipment Hours} \times \text{Load}}{\text{Thermal Efficiency}} \right)
-$$
-
-$$
-\text{Allocated Fuel} = \text{Fuel} \times \frac{\text{Numerator}}{\text{Denominator}}
-$$
-
-## In this equation:
-
-- **Nameplate Power (kW)**: The rated power of the equipment.
-- **Equipment Hours**: The operating hours of the equipment.
-- **Load**: The load factor of the equipment.
-- **Thermal Efficiency**: The efficiency of the equipment in converting fuel to energy.
+[^1]: https://www2.gov.bc.ca/gov/content/environment/waste-management/industrial-waste/agriculture/regulation-requirements/agricultural-boilers-heaters
