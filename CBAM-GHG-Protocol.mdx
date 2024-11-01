@@ -1,0 +1,79 @@
+---
+title: "The difference between CBAM and GHG Protocol"
+date: "2024-10-31"
+tags: ["Verification", "CFR", "GHG"]
+banner: "https://raw.githubusercontent.com/Ming2046/EnviroByte-Blog/master/images/cleanfuel.jpg"
+description: "OpenLCA 101 - Elementary and Intermediate Flows"
+blogType: "normal"
+---
+
+## How does it work?
+
+The EU has been making bold strides in its climate policy, and one of the most pivotal measures is the [Carbon Border Adjustment Mechanism (CBAM) (Regulation (EU) 2023/956)](https://eur-lex.europa.eu/legal-content/EN/TXT/?toc=OJ%3AL%3A2023%3A130%3ATOC&uri=uriserv%3AOJ.L_.2023.130.01.0052.01.ENG). Effective since 2023 in its transitional phase, CBAM is aligned with the EU Emissions Trading System (ETS) and imposes a carbon price on imported goods. This price reflects the greenhouse gases (GHGs) emitted during the production of these goods, known as **embedded emissions**.
+
+The full implementation of CBAM is slated for 2026, at which point EU importers will need to purchase CBAM certificates. These certificates will mirror the carbon costs that would have applied had the goods been produced under stringent EU climate regulations. An important aspect of CBAM is its flexibility: if a non-EU producer has already paid a carbon price in their home country, this cost can be deducted from the CBAM charge, promoting fairness and encouraging global climate efforts.
+
+To ease the transition, CBAM is being introduced in stages. From 2023 to 2025, importers are required to report embedded emissions but without any financial implications. Starting in 2026, the financial component kicks in, and importers will have to buy CBAM certificates. The mechanism currently targets sectors at high risk of carbon leakage, including:
+
+- Iron/Steel
+- Cement
+- Fertilizers
+- Aluminum
+- Hydrogen
+- Electricity
+
+## Key Definitions
+
+CBAM classifies goods into two categories: Simple Goods and Complex Goods, as per REGULATION (EU) 2023/956 (Annex IV a & b):
+
+> • **Simple Goods**: Goods produced solely from input materials and fuels that have zero embedded emissions.
+> • **Complex Goods**: Goods produced using input materials (precursors) that contribute to their embedded emissions.
+
+Imported goods must report both direct and indirect emissions associated with their manufacturing processes:
+
+> • **Direct Emissions**: Emissions released directly from the production process, including those from the onsite generation of heating and cooling, regardless of where the heating and cooling were generated.
+> • **Indirect Emissions**: Emissions resulting from the generation of electricity used in production processes, again irrespective of where the electricity is generated
+
+[The CBAM regulation (Regulation (EU) 2023/956)](https://eur-lex.europa.eu/legal-content/EN/TXT/?toc=OJ%3AL%3A2023%3A130%3ATOC&uri=uriserv%3AOJ.L_.2023.130.01.0052.01.ENG) specifies the calculation of these emissions, following methodologies detailed in Annex IV of the Regulation. However, certain exceptions apply to goods listed in Annex II of the Regulation , including iron and steel, aluminum products, and specific chemicals like hydrogen. For these listed in Annex II of the Regulation, only direct emissions are required to be calculated as embedded emissions.
+
+While most goods must report both types of emissions, certain exceptions exist for items listed in [Annex II of the Regulation](https://eur-lex.europa.eu/legal-content/EN/TXT/?toc=OJ%3AL%3A2023%3A130%3ATOC&uri=uriserv%3AOJ.L_.2023.130.01.0052.01.ENG), such as iron, steel, aluminum products, and specific chemicals like hydrogen. For these, only direct emissions need to be calculated.
+
+## CBAM vs. GHG Protocol: Key Differences
+
+CBAM differs from the GHG Protocol, a widely recognized standard for GHG accounting, in several key ways:
+
+**Emission Classification**:
+
+- Offsite Heating and Cooling: Under CBAM, these are classified as direct emissions, whereas the GHG Protocol categorizes them as Scope 2 (indirect).
+- Onsite Electricity Generation: CBAM treats onsite electricity generation emissions as indirect if the electricity is sourced externally. The GHG Protocol, however, places these emissions under Scope 1 if the fuel is consumed onsite to produce electricity.
+
+Here’s a breakdown of key emission sources and their classification under each framework:
+
+| Emission Source                                                                                | CBAM                                                                                    | GHG Protocol                      |
+| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------- |
+| Facilities’ production-related emission                                                        | Direct Emission                                                                         | Scope 1                           |
+| Onsite produced heating and Cooling                                                            | Direct Emission                                                                         | Scope 1                           |
+| **Offsite produced heating and Cooling**                                                       | **Direct Emission**                                                                     | **Scope 2**                       |
+| **Onsite produced electricity**                                                                | **Indirect Emission**                                                                   | **Scope 1 (as fuel consumption)** |
+| Offsite produced electricity                                                                   | Indirect Emission                                                                       | Scope 2                           |
+| Upstream activities (excluding purchased electricity, stream, heating and cooling for own use) | Precursor emission (Only emission from precursor production for complex goods included) | Scope 3                           |
+| Downstream activities                                                                          | Not in scope                                                                            | Scope 3                           |
+
+## GHG Covered by CBAM
+
+- CBAM focuses mainly on carbon dioxide (CO₂) but extends to perfluorocarbons (PFCs) and nitrous oxide (N₂O) for specific sectors, determined by the product's CN code.
+- The GHG Protocol provides a more comprehensive framework, covering a wider range of GHGs across three scopes:
+  - Scope 1: Direct emissions from owned or controlled sources.
+  - Scope 2: Indirect emissions from purchased electricity, steam, heating, and cooling.
+  - Scope 3: All other indirect emissions, including those from the supply chain.
+
+| **Issue and Sector**                                         | **Cement**          | **Fertilizers**                         | **Iron/Steel**      | **Aluminum**                             | **Hydrogen**        | **Electricity** |
+| ------------------------------------------------------------ | ------------------- | --------------------------------------- | ------------------- | ---------------------------------------- | ------------------- | --------------- |
+| **Reporting metrics**                                        | (per) Tonne of good | (per) Tonne of good                     | (per) Tonne of good | (per) Tonne of good                      | (per) Tonne of good | (per) MWh       |
+| **Greenhouse gases covered**                                 | Only CO2            | CO2 (+ N2O for some fertilizer goods)\* | only CO2            | CO2 (+PFCs for some aluminium goods)\*\* | only CO2            | only CO2        |
+| **Emission coverage during transitional period (2023-2025)** | Direct and indirect | Direct and indirect                     | Direct and indirect | Direct and indirect                      | Direct and indirect | Only direct     |
+| **Emission coverage during definitive eriod (from 2026)**    | Direct and indirect | Direct and indirect                     | Only direct\*\*\*   | Only direct\*\*\*                        | Only direct\*\*\*   | Only direct     |
+
+\*Fertilizer: In the fertilizers sector, Carbon dioxide (CO2) and, only in case of nitric acid production, nitrous oxide (N2O) needs to be monitored as they are the primary greenhouse gases emitted during the production process.
+\*\*Aluminum: For primary (electrolytic) smelting, both carbon dioxide (CO₂) and perfluorocarbons (CF₄ and C₂F₆) must be monitored. For secondary melting (recycling), only carbon dioxide (CO₂) requires monitoring.
+\*\*\* Subject to review
