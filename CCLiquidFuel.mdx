@@ -7,6 +7,68 @@ description: "Carbon content calculation method for liquid fuel. "
 blogType: "normal"
 ---
 
-Calculating the carbon content of liquid fuel is essential for estimating the greenhouse gas emissions from the combustion of liquid fuel. The carbon content of liquid fuel is calculated based on the carbon content of the fuel and the molecular weight of carbon dioxide. The method is based on API Compendium of Greenhouse Gas Emissions Methodologies for the Oil and Gas Industry.
+Calculating the carbon content of liquid fuel is essential for estimating the greenhouse gas emissions from the combustion of liquid fuel. [Alberta TIER quantification](https://open.alberta.ca/dataset/5d79b86b-7811-413f-88d8-acd36cb9d6d2/resource/29984c25-29bc-46cd-83fb-1f54fb3e2f5c/download/epa-alberta-greenhouse-gas-quantification-methodologies-version-2-3-2023-09.pdf) document does not provide methodologies for calculating the carbon content of liquid fuels. This blog post introduces a method for calculating the carbon content of liquid fuels.
 
-Coming soon
+## Differences in Calculating Carbon Content for Liquid and Gaseous Fuels
+
+For gaseous fuels (e.g., natural gas), the molar volume can be converted to mass using a fixed value of 23.645 m³/kmole:
+
+$$
+V = \frac{nRT}{P} = 23.645\ \text{m3/kmol}
+$$
+
+- $n$ = 1 kmole
+- $R$ = 8.314 m3 Pa/(K kmole)
+- $T$ = 288.15 K
+- $P$ = 101325 Pa
+
+at $15^{\circ}\text{C}$ and 1 atmosphere pressure, $V$ is 23.645 m3/kmole. This is not applicable for liquid fuels.
+
+## Liquid Carbon Content Calculation
+
+The carbon content of a liquid fuel mixture is a weighted average of the carbon content of its individual components. First, calculate the weight percent (wt%) of carbon ($Wt\%C$) of each component in the fuel. This is done by multiplying the molecular weight of carbon by the number of carbon atoms in the compound and dividing by the compound’s molecular weight.
+
+$$
+Wt\%C_\text {Cj} = \frac{12.01 \frac{t}{t-mol} \times X }{MW_\text{Cj} \frac{t}{t-mol}}
+$$
+
+where
+
+- $Wt\%C_\text {Cj}$ is carbon content of hydrocarbon compound on a mass percent basis (for example $Wt\%C_\text {C2H6}$, $Wt\%C_\text {C3H8}$)
+
+- 12.01 is the molecular weight of carbon
+- $X$ is the number of carbon atoms in the compound (for example 2 for ethane C2H6, 3 for propane C3H8)
+- $MW_\text{Cj}$ is the molecular weight of the individual hydrocarbon compound (for exmaple, 30.069 t/t-mol for ethane C2H6, 44.0956 t/t-mol for propane C3H8)
+
+The total carbon content of the fuel mixture is then calculated as:
+
+$$
+Wt\%C_\text{mixture} =\frac{1}{100} \sum_{i=1}^{n} (Wt\%_i \times Wt\%C_\text {i})
+$$
+
+where
+
+- $Wt\%C_\text{mixture}$ is the carbon content of the fuel mixture on a **mass percent** basis
+- $Wt\%_i$ is the **weight percent** of the individual fuel component
+- $Wt\%C_\text {i}$ is the carbon content of the individual fuel component $i$ on a weight percent basis, calculated using the formula above (for example $Wt\%C_\text {C2H6}$, $Wt\%C_\text {C3H8}$ )
+
+## CO2 emissions from combustion of liquid fuels
+
+Carbon dioxide emissions from the combustion of liquid fuels can be calculated
+
+$$
+E_{\text{CO2}} = FC \times D \times Wt\%C_\text{mixture} \times 44/12
+$$
+
+where
+$E_{\text{CO2}}$ is the CO2 emissions in mass (e.g. kg)
+$FC$ is the fuel consumption in volume (e.g. gal, m3)
+$D$ is the density of the fuel in mass/volume (e.g. lb/gal,kg/m3)
+
+## Calculation Example
+
+An calculation example can be download from [here](https://docs.google.com/spreadsheets/d/1Bv3hqAbojBtaiqhgeDMVoUstH0fPyzse/edit?usp=sharing&ouid=113683066587589743835&rtpof=true&sd=true)
+
+## Reference
+
+The calculation is simplified fro easier understanding based on the Equation 4-9 to 4-13 from API 2021, [Compendium of Greenhouse Gas Emissions Methodologies for the Oil and Gas Industry](https://www.api.org/~/media/files/policy/esg/ghg/2021-api-ghg-compendium-110921.pdf)
