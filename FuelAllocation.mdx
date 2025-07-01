@@ -36,7 +36,21 @@ $$
 n_{j} = \frac{output}{input}
 $$
 
-When this efficiency factor is applied in AQM's equation, the calculation inadvertently represents energy output rather than input.
+When this efficiency factor is applied in AQM's equation, the calculation
+
+$$
+v_{fuel,j,p} = \sum_{j=1}^{N} \frac{input}{\frac{output}{input}} \times\frac{LF_{i}}{LHV_{j}} \times OH_{i} \times 0.0036
+$$
+
+or
+
+$$
+v_{fuel,j,p} = \sum_{j=1}^{N} \frac{input^2}{output} \times\frac{LF_{i}}{LHV_{j}} \times OH_{i} \times 0.0036
+$$
+
+The AQM v2.3 equation is clearly wrong.
+
+In addition, the AQM is asking for LHV, while all emission factors given in AQM are in HHV. The equation should use HHV, instead of LHV.
 
 ## API Fuel Calculation
 
@@ -75,7 +89,7 @@ The AQM Table C-1 and C-2 provide both thermal efficiency and load factors (base
 - For heaters and boilers: Nameplate power already represents input power, so dividing by thermal efficiency is unnecessary. The corrected equation for these types of equipment is:
 
 $$
-v_{fuel,j,p} = \sum_{j=1}^{N} P_{rate,j} \times\frac{LF_{i}}{LHV_{j}} \times OH_{i} \times 0.0036
+v_{fuel,j,p} = \sum_{j=1}^{N} P_{rate,j} \times\frac{LF_{i}}{HHV_{j}} \times OH_{i} \times 0.0036
 $$
 
 where
@@ -85,7 +99,7 @@ where
 - $P_{rate,j}$ is the maximum rated **input** power of the equipment j (kW).
 - $LF_{j}$ is the load factor for each type of equipment j.
 - $OH_{j}$ is the operating hours for each type of equipment j.
-- $LHV_{j}$ is the lower heating value of the fuel for each type of equipment j (MJ/m3).
+- $HHV_{j}$ is the lower heating value of the fuel for each type of equipment j (MJ/m3).
 - 0.0036 Conversion factor for kWh to GJ.
 
 This correction aligns AQM with actual practice for fuel allocation calculations.
